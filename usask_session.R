@@ -1,5 +1,5 @@
 
-infname <- "C:/Users/Araik/Documents/Research/server_log/data/UofS_access_log.txt"
+infname <- "UofS_access_log.txt"
 hlog <- read.table(infname, fill = TRUE, stringsAsFactors = FALSE)
 hlog <- hlog[,c(1,4,8)]
 colnames(hlog)<- c("host", "time", "size")
