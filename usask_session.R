@@ -66,4 +66,4 @@ x <- ses$time
 Fn <- ecdf(x)
 x <- seq(1,100,length.out = 100)
 ep <- 1 - Fn(x)
-plot(x, ep, type = "l", log="xy") # plot graph
+plot(x, ep, type = "l", log="xy") 
