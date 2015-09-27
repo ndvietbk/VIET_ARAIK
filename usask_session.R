@@ -61,6 +61,7 @@ for (i in 1:num_diff) {
 size_session <- size_session[2:length(size_session)]
 number_paketinsession <- number_paketinsession[2:length(number_paketinsession)]
 ses <- data.frame(time = t_session, ncon = number_paketinsession, size = size_session)
+write.table(ses, "D:/dorm2/20150921/session_extract_usask.txt", col.names = F, row.names = F)
 
 x <- ses$time
 Fn <- ecdf(x)
