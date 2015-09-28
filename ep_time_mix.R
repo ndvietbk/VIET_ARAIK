@@ -20,3 +20,5 @@ data <- cbind(x,data1, data2, data3, data4, data5, nrow=10000)
 
 
 
+
+
