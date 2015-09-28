@@ -18,7 +18,17 @@ data1 <- head(data1,10000)
 data2 <- head(data2,10000)
 data3 <- head(data3,10000)
 data4 <- head(data4,10000)
+
 data <- cbind(data1, data2, data3, data4)
+colnames(data) <- c("V1", "V2", "V3", "V4")
+for (i in 1:10000) {
+  n <- sample(1:4,4,replace = F) #generate random number in 1:4
+  data_temp <- data[i,]
+  data[i, ]$V1 <- data_temp[n[1]] 
+  data[i, ]$V2 <- data_temp[n[2]]
+  data[i, ]$V3 <- data_temp[n[3]]
+  data[i, ]$V4 <- data_temp[n[4]]
+}
 
 
 
