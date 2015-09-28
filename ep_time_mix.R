@@ -14,11 +14,11 @@ data1$V1 <- NULL
 data2$V1 <- NULL
 data3$V1 <- NULL
 data4$V1 <- NULL
-
-x <- lseq(1e-2, 1000, length = 10000)
-data <- cbind(x,data1, data2, data3, data4, data5, nrow=10000)
-
-
+data1 <- head(data1,10000)
+data2 <- head(data2,10000)
+data3 <- head(data3,10000)
+data4 <- head(data4,10000)
+data <- cbind(data1, data2, data3, data4)
 
 
 
