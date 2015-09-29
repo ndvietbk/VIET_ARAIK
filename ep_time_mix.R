@@ -2,8 +2,10 @@ library(minpack.lm)
 library(reliaR)
 library(sfsmisc)
 
-
-data1 <- read.table("D:/dorm2/20150921/ep_time/ep_time_20150416D.txt")
+n <- 1e+5
+alpha <- 0.33
+lambda <- 20
+data1 <- rexp.ext(n, alpha, lambda)
 data2 <- read.table("D:/dorm2/20150921/ep_time/ep_time_20150417D.txt")
 data3 <- read.table("D:/dorm2/20150921/ep_time/ep_time_20150418D.txt")
 data4 <- read.table("D:/dorm2/20150921/ep_time/ep_time_20150419D.txt")
