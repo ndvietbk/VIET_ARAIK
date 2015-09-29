@@ -20,7 +20,7 @@ for (i in 1:n) {
   if (i == 1) {
     comb.thr <- 0
   }
-  j <- sample(1:4, 4) #generate random number in 1:4
+  j <- sample(1:nthr, nthr) #generate random number in 1:4
   comb.thr <- c(comb.thr, all.thr[i, j])
 }
 comb.thr <- x[2:length(comb.thr)]
