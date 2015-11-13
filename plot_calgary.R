@@ -1,4 +1,4 @@
-# code to plot traffic per munite of server "calgary
+# code to plot traffic in munite of server "calgary
 
 
 
@@ -18,14 +18,14 @@ hlog_cal$size <- as.numeric(hlog_cal$size)
 
 
 
-num_second <- 60        # number seconds per minute:  60s
+num_second <- 60        # number seconds in minute:  60s
 size_paketinminute <- 0    # total traffic size per minute (in bytes)
 n <- length(hlog_cal$host) 
 index <- 1                # index of size_paketinminute 
-size_paket <- hlog_cal$size[1]     # temporary variable storage traffic in minute
-time <- 0               # temporary variable storage time
+size_paket <- hlog_cal$size[1]     # temporary variable of traffic per minute
+time <- 0               # temporary time variable 
 
-# Main loop to fize size of traffic per minute
+# Main loop to fize size of traffic in minute
 for (i in 2:n) {
   time <- time + hlog_cal$time[i]
   size_paket <- size_paket + hlog_cal$size[i]
