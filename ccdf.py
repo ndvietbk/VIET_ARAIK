@@ -39,8 +39,7 @@ def main(argv):
     ind = np.linspace(1, n, n)
     p = np.divide(ind, n)                       #determine CDF of variable at position ind
     if (cmp == True):                           # If cmp==true, it's CCDF
-        data_sort = data_sort[::-1]
-        p = p[::-1]
+        p = 1-p
     if num != '':
         s = n/float(num)
     else:
