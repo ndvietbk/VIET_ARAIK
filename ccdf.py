@@ -1,21 +1,19 @@
 # Calculates ccdf of variable from input text file with given step and write it to output text file
 
 #!/usr/bin/python
-
 import pandas as pd
 import numpy as np
 import sys
 import getopt
-
 
 def main(argv):
     infile = ''            #Input file contains variable of which we need calculate cdf
     outfile = ''           #Output cdf file
     num = ''               #Number of needed step
     s = ''                 #Difference between steps
-    cmp = False            #Logic variable for complementary CDF
+    cmp = ''     #Logic variable for complementary CDF
     try:
-        opts, args = getopt.getopt(argv, "hi:o:n:c", ["ifile=", "ofile=", "numpts", "cmpl"])
+        opts, args = getopt.getopt(argv, "hi:o:n:c:", ["ifile=", "ofile=", "numpts=", "cmpl="])
     except getopt.GetoptError:
         print('ccdf.py -i <input file> -o <output file> -n <number of pts> -c <complementary CDF>')
         sys.exit(2)
@@ -30,29 +28,25 @@ def main(argv):
         elif opt in ("-n", "--numpts"):
             num = arg
         elif opt in ("-c", "--cmpl"):
-            cmp = True
+            cmp = arg
 
-    data = pd.read_table(infile)                #Read input file
+    data = pd.read_table(infile, header = None)                #Read input file
     data = np.asarray(data)                     #Convert input variable to array
     data_sort = np.sort(data, axis=None)        #Sort array
     n = data_sort.size                          #Calculate length (size) of array
     ind = np.linspace(1, n, n)
     p = np.divide(ind, n)                       #determine CDF of variable at position ind
-    if (cmp == True):                           # If cmp==true, it's CCDF
+    if (cmp == 'True'):                         # If cmp==true, it's CCDF
         p = 1-p
-    if num != '':
+    if ((num != '')&(float(num)<=n)):
         s = n/float(num)
+        f = open(outfile, 'w')
+        for i in np.arange(n, step=s):
+            f.write('{0:f} {1:f}\n'.format(data_sort[i], p[i]))
+        f.close()
     else:
-        s = 1
-
-    f = open(outfile, 'w')
-    for i in np.arange(n, step=s):
-        f.write('{0:f} {1:f}\n'.format(data_sort[i], p[i]))
-    f.close()
-
+        print("Amount of given steps is larger than amount of lines")
+        print("File write is not successful")
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-
-
-
