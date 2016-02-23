@@ -2,12 +2,36 @@
 import random as rd
 import numpy as np
 import simpy
-RANDOM_SEED = 42                #Seed variable for random number generation
-NUMBER_PACKETS = 2000           #Needed number packets (requests) for simulation
-INTERVAL_PACKETS = 5.0            # Mean inter-arrival time between packets
-TIME_SERVICE =  2.0               # Mean service-time of packets
+import sys
+import getopt
+RANDOM_SEED = ''               #Seed variable for random number generation
+NUMBER_PACKETS = ''           #Needed number packets (requests) for simulation
+INTERVAL_PACKETS = ''            # Mean inter-arrival time between packets
+TIME_SERVICE = ''               # Mean service-time of packets
 data_wt = []                    #List variable for keeping waiting time in queue of each packets
 
+try:
+    opts, args = getopt.getopt(sys.argv[1:], "hr:n:a:s:", ["rndseed=", "numberpacket=", "arrival=", "service="])
+except getopt.GetoptError:
+    print('MM1.py -r <random seed> -n <number packets> -a <mean arrival time> -c <mean service time>')
+    sys.exit(2)
+for opt, arg in opts:
+    if opt == '-h':
+        print('MM1.py -r <random seed> -n <number packets> -a <mean arrival time> -c <mean service time>')
+        sys.exit()
+    elif opt in ("-r", "--rndseed"):
+        RANDOM_SEED = arg
+    elif opt in ("-n", "--numberpacket"):
+        NUMBER_PACKETS = arg
+    elif opt in ("-a", "--arrival"):
+        INTERVAL_PACKETS = arg
+    elif opt in ("-s", "--service"):
+        TIME_SERVICE = arg
+
+RANDOM_SEED = int(RANDOM_SEED)
+NUMBER_PACKETS = int(NUMBER_PACKETS)
+INTERVAL_PACKETS = float(INTERVAL_PACKETS)
+TIME_SERVICE = float(TIME_SERVICE)
 # definition functions
 def arrival(env, number, interval,counter ):           #Funtion generate arrival packets: number - number packets need for simulation, interval - Mean inter-arrival time between packets
     for i in range(number):
