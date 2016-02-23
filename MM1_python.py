@@ -2,12 +2,12 @@
 import random as rd
 import numpy as np
 import simpy
-
 RANDOM_SEED = 42                 #Seed variable for random number generation
 NUMBER_PACKETS = 2000            #Needed number packets (requests) for simulation
 INTERVAL_PACKETS = 5          # Mean inter-arrival time between packets
 TIME_SERVICE =  2               # Mean service-time of packets
-data_wt = []                        #List variable for keeping waiting time in queue of each packets
+data_wt = []
+                      #List variable for keeping waiting time in queue of each packets
 
 # definition functions
 def arrival(env, number, interval,counter ):           #Funtion generate arrival packets: number - number packets need for simulation, interval - Mean inter-arrival time between packets
@@ -30,33 +30,30 @@ def est_mm1(lamda,mu):          #not use in this simulation
     Ed = 1/(mu-lamda)   #Mean delay (system waiting time of a customer from the moment it arrives until service is completed
     Eq = lamda*Ed       #mean queue-size including the customer in service
     return (u,Ed,Eq)
+def main():
+    data_wt = []
+    print("Starting simulation of queueing system M/M/1...\n")
+    rd.seed(RANDOM_SEED)
+    env = simpy.Environment()
+    counter = simpy.Resource(env, capacity=1)
+    t = env.now
+    env.process(arrival(env, NUMBER_PACKETS, INTERVAL_PACKETS, counter))
+    env.run()
+    t = env.now - t   #total time of simulation process
+    print("Total simulation time: %f"% t)
 
-print("Starting simulation of queueing system M/M/1...\n")
-rd.seed(RANDOM_SEED)
-env = simpy.Environment()
-counter = simpy.Resource(env, capacity=1)
-t = env.now
-env.process(arrival(env, NUMBER_PACKETS, INTERVAL_PACKETS, counter))
-env.run()
-t = env.now - t   #total time of simulation process
-print("Total simulation time: %f"% t)
+    #Calculates simulation parameters for M/M/1 queueing system
+    u = TIME_SERVICE/INTERVAL_PACKETS
+    data_wt = np.array(data_wt)
+    tq  = data_wt.sum()              # Total wait time in queue of all packets
 
-#Calculates simulation parameters for M/M/1 queueing system
-u = TIME_SERVICE/INTERVAL_PACKETS
-data_wt = np.array(data_wt)
-tq  = data_wt.sum()              # Total wait time in queue of all packets
-
-lamda = 1/INTERVAL_PACKETS
-mu = 1/TIME_SERVICE
-Ed = 1/(mu-lamda)
-Eq = lamda*Ed       #mean queue-size including the customer in service
-print("Total wait time in queue of all packets: %f" %tq)
-print("Utilization of system:%f" %u)
-print("Mean time spent in system: %f" %Ed)
-print("Mean queue size in system: %f" %Eq)
-
-
-
-
-
-
+    lamda = 1/INTERVAL_PACKETS
+    mu = 1/TIME_SERVICE
+    Ed = 1/(mu-lamda)
+    Eq = lamda*Ed       #mean queue-size including the customer in service
+    print("Total wait time in queue of all packets: %f" %tq)
+    print("Utilization of system:%f" %u)
+    print("Mean time spent in system: %f" %Ed)
+    print("Mean queue size in system: %f" %Eq)
+if __name__ == "__main__":
+    main()
