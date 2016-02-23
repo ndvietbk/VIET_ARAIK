@@ -31,7 +31,6 @@ def est_mm1(lamda,mu):          #not use in this simulation
     Eq = lamda*Ed       #mean queue-size including the customer in service
     return (u,Ed,Eq)
 def main():
-    data_wt = []
     print("Starting simulation of queueing system M/M/1...\n")
     rd.seed(RANDOM_SEED)
     env = simpy.Environment()
@@ -44,9 +43,8 @@ def main():
 
     #Calculates simulation parameters for M/M/1 queueing system
     u = TIME_SERVICE/INTERVAL_PACKETS
-    data_wt = np.array(data_wt)
-    tq  = data_wt.sum()              # Total wait time in queue of all packets
-
+    data = np.array(data_wt)
+    tq  = data.sum()             # Total wait time in queue of all packets
     lamda = 1/INTERVAL_PACKETS
     mu = 1/TIME_SERVICE
     Ed = 1/(mu-lamda)
