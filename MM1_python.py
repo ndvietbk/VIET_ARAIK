@@ -4,8 +4,8 @@ import numpy as np
 import simpy
 RANDOM_SEED = 42                #Seed variable for random number generation
 NUMBER_PACKETS = 2000           #Needed number packets (requests) for simulation
-INTERVAL_PACKETS = 5            # Mean inter-arrival time between packets
-TIME_SERVICE =  2               # Mean service-time of packets
+INTERVAL_PACKETS = 5.0            # Mean inter-arrival time between packets
+TIME_SERVICE =  2.0               # Mean service-time of packets
 data_wt = []                    #List variable for keeping waiting time in queue of each packets
 
 # definition functions
