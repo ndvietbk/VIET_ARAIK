@@ -59,7 +59,7 @@ def main():
     print("Starting simulation of queueing system M/M/1...\n")
     rd.seed(RANDOM_SEED)
     env = simpy.Environment()
-    counter = simpy.Resource(env, capacity=1)
+    counter = simpy.Resource(env, capacity=1)     # A single server
     t = env.now
     env.process(arrival(env, NUMBER_PACKETS, INTERVAL_PACKETS, counter))
     env.run()
