@@ -2,6 +2,15 @@ import pandas as pd
 import numpy as np
 from gg1_function import simulate_gg1, qexp_rate, rand_qexp
 
+def kingman_estimate(time,size):
+    lamb_da = 1/time.mean()
+    mu = 1/size.mean()
+    ca = np.var(time)
+    cs = np.var(size)
+    p = lamb_da/mu
+    y = p*(ca**2 + cs**2)/((1-p)*2*mu)
+    return y
+
 def main():
     #Import file from system, this file contains inter-arrival time and size of request file
     infile ='~/Dropbox/Rproj/beck_check/data/ses_20081013.txt'
@@ -21,7 +30,7 @@ def main():
     rate1= qexp_rate(q1, time_ave)
     rate2=qexp_rate(q2, ssize_ave)
 
-    n = 10000
+    n = 100
     timet = rand_qexp(n,q1,rate1)
     ssizet = rand_qexp(n,q2,rate2)
     timet = timet.flatten()
@@ -31,15 +40,21 @@ def main():
 
     a1 = []
     a2 = []
+    ak = []    #estimate w by kingman formula
     for i in range(len(c)):
         a1.append(simulate_gg1(n,time,ssize/c[i]))
         d1 = pd.DataFrame(a1)
         a2.append(simulate_gg1(n,timet,ssizet/c[i]))
         d2 = pd.DataFrame(a2)
+        ak.append(kingman_estimate(timet,ssizet/c[i]))
+        dk = pd.DataFrame(ak)
     print('\nParameters of queueing system using empirical data')
     print(d1)
     print('\nParameters of queueing system using q exponential distribution series')
     print(d2)
+    print('\nEstimate parameter W using Kingman formula')
+    print(dk)
+
 
     print("column 0: Utilization     Column 1: W     Column 2:    L")
     
