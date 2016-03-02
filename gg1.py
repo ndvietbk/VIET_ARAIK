@@ -3,10 +3,10 @@ import numpy as np
 from gg1_function import simulate_gg1, qexp_rate, rand_qexp
 
 def kingman_estimate(time,size):
-    lamb_da = 1/time.mean()
-    mu = 1/size.mean()
-    ca = np.var(time)
-    cs = np.var(size)
+    lamb_da = 1/np.mean(time)
+    mu = 1/np.mean(size)
+    ca = np.std(time)/np.mean(time)
+    cs = np.std(size)/np.mean(size)
     p = lamb_da/mu
     y = p*(ca**2 + cs**2)/((1-p)*2*mu)
     return y
