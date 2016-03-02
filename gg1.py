@@ -30,7 +30,7 @@ def main():
     rate1= qexp_rate(q1, time_ave)
     rate2=qexp_rate(q2, ssize_ave)
 
-    n = 100
+    n = 10000
     timet = rand_qexp(n,q1,rate1)
     ssizet = rand_qexp(n,q2,rate2)
     timet = timet.flatten()
