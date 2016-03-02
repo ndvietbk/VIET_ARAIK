@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from gg1_function import simulate_gg1, qexp_rate, rand_qexp
+from gg1_function import simulate_gg1, qexp_rate, rand_qexp, simulate_MM1
 
 def kingman_estimate(time,size):
     lamb_da = 1/np.mean(time)
@@ -14,8 +14,8 @@ def kingman_estimate(time,size):
 
 def main():
     #Import file from system, this file contains inter-arrival time and size of request file
-    infile ='~/Dropbox/Rproj/beck_check/data/ses_20081013.txt'
-    #infile = 'ses_20081013.txt'
+    #infile ='~/Dropbox/Rproj/beck_check/data/ses_20081013.txt'
+    infile = 'ses_20081013.txt'
     data = pd.read_csv(infile,delim_whitespace = True, header=None, na_filter = True)      #Read file without header and using space ' ' to seperate between columns
     data.columns = ['time','ip', 'numcon', 'size']   # Sign names for columns
     data = data[data.time >= 0]                                               #Drop negative time variable
@@ -27,8 +27,11 @@ def main():
     ssize_ave = ssize.mean()
 
 
-    q1 = 1.30
-    q2 = 1.32
+    #q1 = 1.30
+    #q2 = 1.32
+
+    q1=1
+    q2=1
     rate1= qexp_rate(q1, time_ave)
     rate2=qexp_rate(q2, ssize_ave)
 
@@ -38,25 +41,29 @@ def main():
     timet = timet.flatten()
     ssizet = ssizet.flatten()
 
-    c=np.logspace(np.log10(8*10**6.15), np.log10(8*10**6.2), 5);
-
+    #c=np.logspace(np.log10(8*10**6.15), np.log10(8*10**6.2), 5);
+    c = np.array([1,1,1,1,1])
     a1 = []
     a2 = []
-    ak = []    #estimate w by kingman formula
+    #ak = []    #estimate w by kingman formula
+    am = []
     for i in range(len(c)):
-        a1.append(simulate_gg1(n,time,ssize/c[i]))
-        d1 = pd.DataFrame(a1)
+        #a1.append(simulate_gg1(n,time,ssize/c[i]))
+        #d1 = pd.DataFrame(a1)
         a2.append(simulate_gg1(n,timet,ssizet/c[i]))
         d2 = pd.DataFrame(a2)
-        ak.append(kingman_estimate(timet,ssizet/c[i]))
-        dk = pd.DataFrame(ak)
-    print('\nParameters of queueing system using empirical data')
-    print(d1)
+        #ak.append(kingman_estimate(timet,ssizet/c[i]))
+        #dk = pd.DataFrame(ak)
+        am.append(simulate_MM1(1/np.mean(timet), 1/np.mean(ssizet/c[i])))
+        dm = pd.DataFrame(am)
+    #print('\nParameters of queueing system using empirical data')
+    #print(d1)
     print('\nParameters of queueing system using q exponential distribution series')
     print(d2)
-    print('\nEstimate parameter W using Kingman formula')
-    print(dk)
-
+    #print('\nEstimate parameter W using Kingman formula')
+    #print(dk)
+    print('\nParameters of queueing system MM1')
+    print(dm)
 
     print("column 0: Utilization     Column 1: W     Column 2:    L")
     
