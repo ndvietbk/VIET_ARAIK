@@ -13,6 +13,8 @@ def arrival(env, number,counter,interval,time_service):
         yield env.timeout(t)
         c = service(env,'Customer %02d'%i,counter,i,time_service[i])
         env.process(c)
+
+
 def service(env,name, counter,i, time_service):
     arrive = env.now
     with counter.request() as req:
@@ -23,6 +25,8 @@ def service(env,name, counter,i, time_service):
         ts = time_service
         yield env.timeout(ts)
         #print('%7.4f %s: Finished' % (env.now, name))
+
+
 def simulate_gg1(n,interval_time,time_service):
     env = simpy.Environment()
     counter = simpy.Resource(env, capacity=1)
@@ -55,8 +59,8 @@ def simulate_MM1(lamb_da,mu):
     u = lamb_da/mu
     if u>1:
         u=1
-    Wq =1/(mu-lamb_da)
-    W = Wq + 1/mu
+    W =1/(mu-lamb_da)
+    Wq = W - 1/mu
     L = lamb_da*W
     return (u,W,L)
 #-----------------------------------------------------------------------------------------------------------------------
@@ -74,9 +78,10 @@ def ts_qlog(x,q):
     else:
         y = (x**(1-q)-1)/(1-q)
     return y
+
+
 def rand_qexp(N,q,rate):
     q1 = 1/(2-q)
     u = np.random.uniform(0,1,size=(1,N))
     y = -q1*ts_qlog(u,q1)/rate
     return y
-
