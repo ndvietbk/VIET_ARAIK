@@ -8,7 +8,7 @@ def main():
     data = pd.read_csv(infile,delim_whitespace = True, header=None, na_filter = True)      #Read file without header and using space ' ' to seperate between columns
     data.columns = ['Time','IP','numcon','size']   # Sign names for columns
     data = data[data.time >=0]                                               #Drop negative time variable
-    time = np.asarray(data['time'])                                            #Variable x contain values of variable
+    time = np.asarray(data['time'])                                            
     ssize = np.asarray(data['size'])
     ssize = np.nan_to_num(ssize)                                                   #Replace nan size variable to 0
 
