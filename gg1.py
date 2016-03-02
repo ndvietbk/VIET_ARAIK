@@ -8,12 +8,14 @@ def kingman_estimate(time,size):
     ca = np.std(time)/np.mean(time)
     cs = np.std(size)/np.mean(size)
     p = lamb_da/mu
-    y = p*(ca**2 + cs**2)/((1-p)*2*mu)
+    #y = p*(ca**2 + cs**2)/((1-p)*2*mu)
+    y = (p/(1-p))*0.5*(ca**2 + cs**2)/lamb_da+1/mu
     return y
 
 def main():
     #Import file from system, this file contains inter-arrival time and size of request file
     infile ='~/Dropbox/Rproj/beck_check/data/ses_20081013.txt'
+    #infile = 'ses_20081013.txt'
     data = pd.read_csv(infile,delim_whitespace = True, header=None, na_filter = True)      #Read file without header and using space ' ' to seperate between columns
     data.columns = ['time','ip', 'numcon', 'size']   # Sign names for columns
     data = data[data.time >= 0]                                               #Drop negative time variable
@@ -36,7 +38,7 @@ def main():
     timet = timet.flatten()
     ssizet = ssizet.flatten()
 
-    c=np.logspace(np.log10(8*10**8), np.log10(8*10**9), 5);
+    c=np.logspace(np.log10(8*10**6.15), np.log10(8*10**6.2), 5);
 
     a1 = []
     a2 = []
