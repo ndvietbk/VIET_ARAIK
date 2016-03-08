@@ -14,15 +14,15 @@ time = np.asarray(data.time)
 
 #----------Function for estimating Hurst by MF-DFA------------------------------------------------------------------------------------------
 '''
-    Function DFA is used for estimating Hurst parameter of time series based on J.W. Kantelhardt's paper (2002)
-        "Multifractal of detrended fluctuation analysis of non stationary time series
+    Function MF-DFA is used for estimating Hurst parameter of time series based on J.W. Kantelhardt's paper (2002)
+        "Multifractal of detrended fluctuation analysis of non stationary time series"
     Input parameters:   1, indata: Time series
                         2, scale:  List or array variable define the sample sizes of the non-overlapping segments
                                 for instance: scale = np.logspace(np.log10(10**1),np.log10(10**5),30)
                         3, q: order statistical moment
                         4, m: Polynomial trend (m=1: linear, m=2: quadratic, m=3: cubic)
                         Usually, q=2, m=1
-    Output:             1, H: Hurst parameters. It is floar variable
+    Output:             1, H: Hurst parameters. It is float variable
                         2, scale: similar to input scale. It is list (or array) variable
                         3, F: The fluctuation function. It is list
 '''
