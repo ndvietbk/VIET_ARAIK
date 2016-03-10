@@ -48,7 +48,7 @@ def DFA(indata,scale,q,m):
             RMSt.append(math.sqrt(np.mean((yv-fit)**2))) #Equation 2. But calculating only F(v,s) not F(v,s)**2
         RMS = np.asarray(RMSt)                      #Convert RMSt to array
         qRMS = RMS**q
-        F.append(np.mean(qRMS)**(1/q))              #Equation 4
+        F.append(np.mean(qRMS)**(1.0/q))              #Equation 4
         del RMSt[:]                                 #Reset RMSt[:]
     C = np.polyfit(np.log2(scale),np.log2(F),m)
     H = C[0]                                        #Hurst parameter
