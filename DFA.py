@@ -5,11 +5,16 @@ import matplotlib.pyplot as plt
 
 
 #Extract time series needed for Hurst parameter analysis
-infile = 'saskatchewan.txt'
+# infile = 'saskatchewan.txt'
+# data = pd.read_csv(infile,delim_whitespace = True, header=None, na_filter = True)
+# data.columns = ['host','time','size']
+# data = data[data.time >= 0]
+# time = np.asarray(data.time)
+
+infile = 'norm_1.txt'
 data = pd.read_csv(infile,delim_whitespace = True, header=None, na_filter = True)
-data.columns = ['host','time','size']
-data = data[data.time >= 0]
-time = np.asarray(data.time)
+data.columns = ['T']
+time = np.asarray(data.T)
 #-------------------------------------------------------------------------------------------------------------------
 
 #----------Function for estimating Hurst by MF-DFA------------------------------------------------------------------------------------------
@@ -22,9 +27,9 @@ time = np.asarray(data.time)
                         3, q: order statistical moment
                         4, m: Polynomial trend (m=1: linear, m=2: quadratic, m=3: cubic)
                         Usually, q=2, m=1
-    Output:             1, H: Hurst parameters. It is float variable
-                        2, scale: similar to input scale. It is list (or array) variable
-                        3, F: The fluctuation function. It is list
+    Output:             1, H: Hurst parameters. It is a float variable
+                        2, scale: similar to input scale. It is a list (or array) variable
+                        3, F: The fluctuation function. It is a list variable
 '''
 
 def DFA(indata,scale,q,m):
