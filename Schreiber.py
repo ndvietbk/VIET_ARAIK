@@ -41,7 +41,7 @@ def correlate(x,b):
     ind2 = np.asarray(range(N/2,N-1))
     ind2 = np.array(ind2,dtype=np.int64)
     xft[N/2:N-1]= [a * b for a, b in zip(xft[N/2:N-1], f)]
-    xft[N-1] = xft[N-1]*0.5**(.8/2)
+    xft[N-1] = xft[N-1]*0.5**(b/2.0)
     #inverse FFT
     x1 = np.fft.ifft(xft).real
     #Result normaliztion
@@ -61,7 +61,7 @@ def schriber(x, H, Htol, Hstep, maxiter):
         z = np.sort(y)
         p = sorted(range(len(y)),key=lambda x:y[x])
         y[p] = x
-        He = DFA(y,2,1)
+        He = DFA(y,2,2)
         print He
         Hcor = 2*(Hcor + Hstep)
         iter = iter +1
@@ -74,10 +74,14 @@ def main():
     data.columns = ['T']
     time = np.asarray(data.T)
     time = time.flatten()
-    y,iter = schriber(time, 0.8, 0.1, 0.01,1000)
-    print y
+    y,iter = schriber(time, 0.8, 0.1, 0.05,1000)
+    print 'time series:', y
     print iter
-    Hy = DFA(y,2,1)
+    Hy = DFA(y,2,2)
     print Hy
 if __name__ == '__main__':
     main()
+
+
+
+
