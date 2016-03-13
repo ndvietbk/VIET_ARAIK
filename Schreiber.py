@@ -1,7 +1,13 @@
-import pandas as pd
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Copyright (C) 2016 by Araik Tamazian, Viet Duc Nguyen
+
+#import pandas as pd
 import numpy as np
 import math
-
+import scipy.special as sp
+import cmath as cm
 
 def DFA(indata,q,m):
     scale = np.logspace(np.log10(10**1),np.log10(10**3),10)
@@ -27,52 +33,67 @@ def DFA(indata,q,m):
     H = C[0]                                        #Hurst parameter
     return(H)
 
-def correlate(x,b):
-    N = len(x)
-    #FFT
-    xft = np.fft.fft(x)
-    #Modify power spectrum
-    xft[0]=0
-    ind1 = np.linspace(2, N/2, N/2-2)
-    f = (0.5*np.divide(ind1,N))**(-b/2.0)
-    xft[2:N/2]= np.multiply(xft[2:N/2], f)
-    xft[N/2+1:N-1]= np.multiply(xft[N/2+1:N-1], f)
-  #  xft[N] = xft[N]*0.5**(-b/2)
-    #inverse FFT
-    x1 = np.fft.ifft(xft).real
-    #Result normaliztion
-    y = x1*((N/np.sum(x1**2))**0.5)
-    return(y)
+def fgnoise(n, H):
+    w = np.linspace(2*np.pi/n, np.pi, n/2-1)
+    Aw = 2*np.sin(np.pi*H)*sp.gamma(2*H+1)*(1-np.cos(w))
+    d = -2*H-1
+    d1 = -2*H
 
-def schriber(x, H, Htol, Hstep, maxiter):
+    a1 = 2*np.pi+w
+    a2 = 4*np.pi+w
+    a3 = 6*np.pi+w
+    a4 = 8*np.pi+w
+
+    b1 = 2*np.pi-w
+    b2 = 4*np.pi-w
+    b3 = 6*np.pi-w
+    b4 = 8*np.pi-w
+
+    Bw1 = (a3**d1 + b3**d1 + a4**d1 + b4**d1)/(8*H*np.pi)
+    Bw = a1**d + b1**d + a2**d + b2**d + a3**d + b3**d +Bw1
+    Sw = Aw*(np.abs(w)**(-2*H-1) + Bw)
+
+    Z = np.zeros(n/2, dtype=complex)
+    Zph = np.random.uniform(0, 2*np.pi, n/2-1)
+    #Z = cm.rect(Sw**0.5, Zph)
+    Z = np.vectorize(cm.rect)(Sw**0.5, Zph)
+
+    Z1 = np.zeros(n, dtype=complex)
+    Z1[0] = 0
+    Z1[1:n/2] = Z
+    Z1[n/2+1:n] = np.conj(Z)
+
+    x = np.fft.ifft(Z1).real
+    return(x)
+
+
+def schriber(x, H, Htol, maxiter):
     iter = 0
     Hcor = H
     He = 0
     N = len(x)
     x = np.sort(x)
-    y1 = np.random.normal(size =N)
     while((He < H-Htol)|(He>H+Htol))&(iter<maxiter):
-        y = y1
-        y = correlate(y,Hcor)
+        y = fgnoise(N,Hcor)
         z = np.sort(y)
         p = sorted(range(len(y)),key=lambda x:y[x])
         y[p] = x
         He = DFA(y,2,2)
         print He
-        Hcor = 2*(Hcor + Hstep)
+        Hcor = Hcor + (Hcor-He)
         iter = iter +1
     return y,iter
 
 
 def main():
-    infile = 'norm_1.txt'
-    data = pd.read_csv(infile,delim_whitespace = True, header=None, na_filter = True)
-    data.columns = ['T']
-    time = np.asarray(data.T)
-    time = time.flatten()
-    y = correlate(time, 0.7)
-    #y,iter = schriber(time, 0.8, 0.1, 0.01,1000)
-    #print iter
+    #infile = 'norm_1.txt'
+    #data = pd.read_csv(infile,delim_whitespace = True, header=None, na_filter = True)
+    #data.columns = ['T']
+    #time = np.asarray(data.T)
+    #time = time.flatten()
+    y1 = np.random.exponential(1, size = 5e+5)
+    y,itr = schriber(y1, 0.7, 0.02, 1000)
+    print itr
     Hy = DFA(y,2,2)
     print Hy
 
