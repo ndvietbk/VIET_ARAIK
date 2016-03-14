@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-from gg1_function import simulate_gg1, qexp_rate, rand_qexp, simulate_MM1
-
+from gg1_function import simulate_gg1, qexp_rate, rand_qexp, simulate_mm1
+import matplotlib.pyplot as plt
 def kingman_estimate(time,size):
     lamb_da = 1/np.mean(time)
     mu = 1/np.mean(size)
@@ -13,60 +13,83 @@ def kingman_estimate(time,size):
     return y
 
 def main():
-    #Import file from system, this file contains inter-arrival time and size of request file
-    #infile ='~/Dropbox/Rproj/beck_check/data/ses_20081013.txt'
+
     infile = 'ses_20081013.txt'
-    data = pd.read_csv(infile,delim_whitespace = True, header=None, na_filter = True)      #Read file without header and using space ' ' to seperate between columns
-    data.columns = ['time','ip', 'numcon', 'size']   # Sign names for columns
-    data = data[data.time >= 0]                                               #Drop negative time variable
-    time = np.asarray(data['time'])
-    time = np.diff(time)
-    ssize = np.asarray(data['size'])
+    data1 = pd.read_csv(infile,delim_whitespace = True, header=None, na_filter = True)      #Read file without header and using space ' ' to seperate between columns
+    data1.columns = ['time','ip', 'numcon', 'size']   # Sign names for columns
+    data1 = data1[data1.time >= 0]                    #Drop negative time variable
+    data =data1[0:10**6]
+    time1 = np.asarray(data['time'])
+    time1 = np.diff(time1)
+    time = np.insert(time1,0,0.0)
+    ssize = data['size']
 
-    time_ave = time.mean()
-    ssize_ave = ssize.mean()
+    timess = pd.read_csv('sur_size_20081013.txt')
+    timess = np.asarray(timess)
+    timess = timess.flatten()
 
+    ssizess = pd.read_csv('sur_time_20081013.txt')
+    ssizess = np.asarray(ssizess)
+    ssizess = ssizess.flatten()
 
-    #q1 = 1.30
-    #q2 = 1.32
-
-    q1=1
-    q2=1
-    rate1= qexp_rate(q1, time_ave)
-    rate2=qexp_rate(q2, ssize_ave)
-
-    n = 10000
-    timet = rand_qexp(n,q1,rate1)
-    ssizet = rand_qexp(n,q2,rate2)
-    timet = timet.flatten()
-    ssizet = ssizet.flatten()
-
-    #c=np.logspace(np.log10(8*10**6.15), np.log10(8*10**6.2), 5);
-    c = np.array([1,1,1,1,1])
+    c=np.logspace(np.log10(8*10**6.2), np.log10(8*10**8),10);
     a1 = []
     a2 = []
-    #ak = []    #estimate w by kingman formula
     am = []
+    n = 10**5
     for i in range(len(c)):
-        #a1.append(simulate_gg1(n,time,ssize/c[i]))
-        #d1 = pd.DataFrame(a1)
-        a2.append(simulate_gg1(n,timet,ssizet/c[i]))
-        d2 = pd.DataFrame(a2)
-        #ak.append(kingman_estimate(timet,ssizet/c[i]))
-        #dk = pd.DataFrame(ak)
-        am.append(simulate_MM1(1/np.mean(timet), 1/np.mean(ssizet/c[i])))
-        dm = pd.DataFrame(am)
-    #print('\nParameters of queueing system using empirical data')
-    #print(d1)
-    print('\nParameters of queueing system using q exponential distribution series')
+        a1.append(simulate_gg1(n,time,ssize/c[i]))
+        a2.append(simulate_gg1(n,timess,ssizess/c[i]))
+        am.append(simulate_mm1(1/np.mean(time), 1/np.mean(ssize/c[i])))
+    d1 = pd.DataFrame(data = a1,index=c, columns=['Ur','Wr','Lr'])
+    d2 = pd.DataFrame(data = a2,index=c, columns=['Us','Ws','Ls'])
+    dm = pd.DataFrame(data = am,index=c, columns=['Um','Wm','Lm'])
+    print('\nParameters of queueing system using empirical data')
+    print(d1)
+    print('\nParameters of queueing system using q exponential distribution series with s-s method')
     print(d2)
-    #print('\nEstimate parameter W using Kingman formula')
-    #print(dk)
-    print('\nParameters of queueing system MM1')
+    print('\nParameters of queueing system mm1')
     print(dm)
-
     print("column 0: Utilization     Column 1: W     Column 2:    L")
-    
-    
+
+    plt.subplot(1,3,1)                                  #plt.subplot(row,column, position)
+    plt.plot(c,d1['Ur'], color = 'black',linewidth = 2)
+    plt.plot(c,d2['Us'], color = 'red',linewidth = 2)
+    plt.plot(c,dm['Um'], color = 'green',linewidth = 2)
+    plt.xlabel('Channel throughput, C', size = 15)
+    plt.ylabel('Utilization, U', size = 15)
+    plt.yscale('log')
+    plt.xscale('log')
+    plt.xticks(color='black', size=15)
+    plt.yticks(color='black', size=15)
+    plt.legend(loc = "upper right")
+
+
+    plt.subplot(1,3,2)
+    plt.plot(c,d1['Wr'], color = 'black',linewidth = 2)
+    plt.plot(c,d2['Ws'], color = 'red',linewidth = 2)
+    plt.plot(c,dm['Wm'], color = 'green',linewidth = 2)
+    plt.xlabel('Channel throughput, C', size = 15)
+    plt.ylabel('Average soujourn time,W', size = 15)
+    plt.yscale('log')
+    plt.xscale('log')
+    plt.xticks(color='black', size=15)
+    plt.yticks(color='black', size=15)
+    plt.legend(loc = "upper right")
+
+    plt.subplot(1,3,3)
+    plt.loglog(c,d1['Lr'], color = 'black',linewidth = 2)
+    plt.loglog(c,d2['Ls'], color = 'red',linewidth = 2)
+    plt.loglog(c,dm['Lm'], color = 'green',linewidth = 2)
+    plt.xlabel('Channel throughput, C', size = 15)
+    plt.ylabel('Average request in system, L', size = 15)
+    plt.xticks(color='black', size=15)
+    plt.yticks(color='black', size=15)
+    plt.yscale('log')
+    plt.xscale('log')
+    plt.legend(loc = "upper right")
+
+    plt.show()
+
 if __name__ == '__main__':
     main()
