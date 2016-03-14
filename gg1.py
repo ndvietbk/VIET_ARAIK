@@ -15,14 +15,15 @@ def kingman_estimate(time,size):
 def main():
 
     infile = 'ses_20081013.txt'
-    data1 = pd.read_csv(infile,delim_whitespace = True, header=None, na_filter = True)      #Read file without header and using space ' ' to seperate between columns
-    data1.columns = ['time','ip', 'numcon', 'size']   # Sign names for columns
-    data1 = data1[data1.time >= 0]                    #Drop negative time variable
-    data =data1[0:10**6]
+    data = pd.read_csv(infile,delim_whitespace = True, header=None, na_filter = True)      #Read file without header and using space ' ' to seperate between columns
+    data.columns = ['time','ip', 'numcon', 'size']   # Sign names for columns
+    data = data[data.time >= 0]                    #Drop negative time variable
     time1 = np.asarray(data['time'])
     time1 = np.diff(time1)
     time = np.insert(time1,0,0.0)
+    time  = time/np.mean(time)
     ssize = data['size']
+    ssize = ssize/np.mean(ssize)
 
     timess = pd.read_csv('sur_time_20081013.txt')
     timess = np.asarray(timess)
@@ -32,7 +33,7 @@ def main():
     ssizess = np.asarray(ssizess)
     ssizess = ssizess.flatten()
 
-    c=np.logspace(np.log10(8*10**6.2), np.log10(8*10**8),10);
+    c=np.logspace(np.log10(2), np.log10(10),10)
     a1 = []
     a2 = []
     am = []
