@@ -24,11 +24,11 @@ def main():
     time = np.insert(time1,0,0.0)
     ssize = data['size']
 
-    timess = pd.read_csv('sur_size_20081013.txt')
+    timess = pd.read_csv('sur_time_20081013.txt')
     timess = np.asarray(timess)
     timess = timess.flatten()
 
-    ssizess = pd.read_csv('sur_time_20081013.txt')
+    ssizess = pd.read_csv('sur_size_20081013.txt')
     ssizess = np.asarray(ssizess)
     ssizess = ssizess.flatten()
 
