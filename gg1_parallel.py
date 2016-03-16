@@ -24,10 +24,10 @@ print 'len time:', len(time)
 print 'len size: ', len(ssize)
 
 #Import surrogate time
-timess = pd.read_csv('sur_time_20081013.txt')
+timess = pd.read_csv('sur_time_20081013_2.txt')
 timess = np.asarray(timess)
 timess = timess.flatten()
-ssizess = pd.read_csv('sur_size_20081013.txt')
+ssizess = pd.read_csv('sur_size_20081013_2.txt')
 ssizess = np.asarray(ssizess)
 ssizess = ssizess.flatten()
 print 'len timess:',len(timess)
@@ -82,7 +82,6 @@ if __name__ == '__main__':
     plt.xscale('log')
     plt.xticks(color='black', size=15)
     plt.yticks(color='black', size=15)
-    plt.xlim(0,10**0)
     plt.legend(loc = "upper right")
 
     #Plot Average sojourn time in system versus throughput
