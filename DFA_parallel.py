@@ -28,7 +28,7 @@ time  = time/np.mean(time)
     Input parameters:   1, indata: Time series
                         2, scale:  List or array variable define the sample sizes of the non-overlapping segments
                                 for instance: scale = np.logspace(np.log10(10**1),np.log10(10**5),30)
-                        q=2, m=1
+                        q=2, m=2
     Output:             F: The fluctuation function. It is a list variable
 '''
 
