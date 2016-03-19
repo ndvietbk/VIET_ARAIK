@@ -34,7 +34,7 @@ time  = time/np.mean(time)
 
 N = len(time)
 
-scale = np.logspace(np.log10(10**1),np.log10(N/4.0),10)
+scale = np.logspace(np.log10(10**1),np.log10(N/4.0),30)
 scale = scale.astype(int)
 
 y = np.cumsum(time-time.mean())                         #Equation 1 in Kantelhardt's paper
@@ -49,7 +49,7 @@ def F_DFA(a,scale):
         index_end = (v+1)*scale
         index = range(index_start,index_end)            #calculate index for each segment
         av = a[index_start:index_end]                   #Extract values of time series for each segments
-        c = np.polyfit(index,av,2)
+        c = np.polyfit(index,av,2.0)
         fit = np.polyval(c,index)
         RMSt.append(math.sqrt(np.mean((av-fit)**2.0)))  #Equation 2. But calculating only F(v,s) not F(v,s)**2
     RMS = np.asarray(RMSt)                              #Convert RMSt to array
