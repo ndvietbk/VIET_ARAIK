@@ -31,7 +31,6 @@ time  = time/np.mean(time)
 
 
 
-#----------Function for estimating Hurst by MF-DFA------------------------------------------------------------------------------------------
 '''
     Function MF-DFA is used for estimating Hurst parameter of time series based on J.W. Kantelhardt's paper (2002)
         "Multifractal of detrended fluctuation analysis of non stationary time series"
@@ -51,6 +50,8 @@ scale = np.logspace(np.log10(10**1),np.log10(N/4.0),10)
 scale = scale.astype(int)
 y = np.cumsum(time-time.mean())         #Equation 1 in paper
 inputs = range(len(scale))
+
+
 def F_DFA(a,scale):
     RMSt = []                               #Temporary RMS variable: contain F(s,v) value
     ns = int(np.floor(len(a)/scale))         #number of segments: Ns = int(N/s)
@@ -72,7 +73,7 @@ def processInput(i):
     return F_DFA(y,scale[i])
 
 
-#------------------ End DFA function -------------------------------------------------------------------------
+#------------------- End DFA function -------------------------------------------------------------------------
 if __name__ == '__main__':
     start_time = timeit.default_timer()                                         #Variale for calculate time of simulation
     print 'Time of beginning simulation: ', datetime.now()
