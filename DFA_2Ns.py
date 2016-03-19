@@ -1,9 +1,13 @@
 #Program simulate queueing system in parallel
 #Copyright (C) 2016 by Araik Tamazian, Viet Duc Nguyen
+#Saint Petersburg  Electrotechnical University LETI
+
 import pandas as pd
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+import timeit
+from datetime import datetime
 
 
 #Extract time series needed for Hurst parameter analysis
@@ -13,10 +17,14 @@ data.columns = ['host','time','size']
 data = data[data.time >= 0]
 time = np.asarray(data.time)
 
-# infile = 'norm_1.txt'
-# data = pd.read_csv(infile,delim_whitespace = True, header=None, na_filter = True)
-# data.columns = ['T']
-# time = np.asarray(data.T)
+# infile = 'ses_20081013.txt'
+# data = pd.read_csv(infile,delim_whitespace = True, header=None, na_filter = True,usecols = [0])
+# data.columns = ['time']
+# data = data[data.time >= 0]                    #Drop negative time variable
+# time1 = np.asarray(data['time'])
+# time1 = np.diff(time1)
+# time = np.insert(time1,0,0.0)
+# time  = time/np.mean(time)
 #-------------------------------------------------------------------------------------------------------------------
 
 #----------Function for estimating Hurst by MF-DFA------------------------------------------------------------------------------------------
@@ -63,10 +71,14 @@ def DFA(indata,scale,q,m):
     return (H,scale,F)
 #------------------- End DFA function -------------------------------------------------------------------------
 
-def main():
-    scale_in = np.logspace(np.log10(10**1),np.log10(10**5),30)
-    scale_in = scale_in.astype(int)
-    H,scale,F = DFA(time,scale_in,2,2)
+if __name__ == '__main__':
+    start_time = timeit.default_timer()                                         #Variale for calculate time of simulation
+    print 'Time of beginning simulation: ', datetime.now()                      #Print current time
+
+
+    scale = np.logspace(np.log10(10**1),np.log10(10**5),30)
+    scale = scale.astype(int)
+    H,scale,F = DFA(time,scale,2,2)
 
     C = np.polyfit(np.log2(scale),np.log2(F),1)
     regline = np.polyval(C,np.log2(scale))
@@ -82,7 +94,6 @@ def main():
 
     plt.legend(loc = "upper left")
     plt.show()
-if __name__ == '__main__':
-    main()
+
 
 
