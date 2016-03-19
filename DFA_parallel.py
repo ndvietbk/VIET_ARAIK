@@ -73,7 +73,7 @@ def processInput(i):
     return F_DFA(y,scale[i])
 
 
-#------------------- End DFA function -------------------------------------------------------------------------
+
 if __name__ == '__main__':
     start_time = timeit.default_timer()                                         #Variale for calculate time of simulation
     print 'Time of beginning simulation: ', datetime.now()
